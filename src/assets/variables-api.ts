@@ -1,13 +1,14 @@
-interface IVariable {
+interface ITags {
   name: string;
   longname?: string;
   type: string | boolean;
   address: string;
   value?: string | boolean;
+  show?: boolean;
   description?: string;
 }
 
-const variablesPLC: IVariable[] = [
+const tagsPLC: ITags[] = [
   {
     name: "dp1",
     longname: "Capteur 1er tapis",
@@ -46,4 +47,4 @@ const variablesPLC: IVariable[] = [
   },
 ];
 
-export default variablesPLC;
+export default tagsPLC;

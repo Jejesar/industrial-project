@@ -6,22 +6,19 @@ export default async function handle(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    var variables = [];
-
     const { name } = req.query;
 
     try {
-      variables = await db.tags.findMany({
+      await db.tags.update({
         where: {
           name: name as string,
         },
+        data: {
+          show: req.body.show,
+        },
       });
 
-      if (variables.length === 0) {
-        return res.status(404).json({ message: "Variable not found" });
-      }
-
-      return res.status(200).json(variables);
+      return res.status(200).json({ message: "Variable updated" });
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
     }

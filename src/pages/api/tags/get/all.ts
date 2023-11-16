@@ -5,7 +5,7 @@ export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === "GET") {
+  if (req.method === "POST") {
     var variables = [];
 
     try {

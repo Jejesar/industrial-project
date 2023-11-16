@@ -8,6 +8,7 @@ import {
   Stack,
   Text,
   useBreakpointValue,
+  useColorModeValue,
 } from "@chakra-ui/react";
 
 export default function HeroHome() {
@@ -30,16 +31,12 @@ export default function HeroHome() {
                 position: "absolute",
                 bottom: 1,
                 left: 0,
-                bg: "blue.400",
+                bg: useColorModeValue("blue.200", "blue.400"),
                 zIndex: -1,
               }}
             >
-              Freelance
+              Projet industriel
             </Text>
-            <br />{" "}
-            <Text color={"blue.400"} as={"span"}>
-              Design Projects
-            </Text>{" "}
           </Heading>
           <Text fontSize={{ base: "md", lg: "lg" }} color={"gray.500"}>
             The project board is an exclusive resource for contract work.

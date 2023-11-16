@@ -26,7 +26,6 @@ import {
 } from "@chakra-ui/icons";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 interface NavLinkProps {
   children: React.ReactNode;
@@ -79,11 +78,6 @@ export default function Navbar() {
     isOpen: isMobileNavOpen,
     onOpen: onMobileNavOpen,
     onClose: onMobileNavClose,
-  } = useDisclosure();
-  const {
-    isOpen: isRightMenuOpen,
-    onOpen: onRightMenuOpen,
-    onClose: onRightMenuClose,
   } = useDisclosure();
   const { data: session } = useSession();
 

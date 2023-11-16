@@ -1,14 +1,16 @@
 interface IVariable {
   name: string;
+  longname?: string;
   type: string | boolean;
   address: string;
-  value: string | boolean;
-  description: string;
+  value?: string | boolean;
+  description?: string;
 }
 
 const variablesPLC: IVariable[] = [
   {
     name: "dp1",
+    longname: "Capteur 1er tapis",
     type: "Boolean",
     address: "%I1000.0",
     value: false,

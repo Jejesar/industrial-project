@@ -1,24 +1,18 @@
-import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
+import NextAuth, { MyUser, NextAuthOptions, User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { NextApiHandler } from "next";
+import { DefaultSession } from "next-auth";
 
-interface Credentials {
-  username: string;
-  password: string;
-}
+declare module "next-auth" {
+  interface Session extends DefaultSession {
+    user: DefaultSession["user"] & MyUser;
+  }
 
-export interface MySession extends Session {
-  user: {
+  interface MyUser extends User {
     id: string;
     name: string;
     role: string;
-  };
-}
-
-interface MyUser extends User {
-  id: string;
-  name: string;
-  role: string;
+  }
 }
 
 export const authOptions: NextAuthOptions = {

@@ -1,10 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { db } from "~/server/db";
-
-interface Credentials {
-  username: string;
-  password: string;
-}
+import { Credentials } from "~/assets/types";
 
 export default async function handle(
   req: NextApiRequest,

@@ -30,7 +30,6 @@ export default function SimpleCard({}) {
   const {
     handleSubmit,
     register,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm();
 

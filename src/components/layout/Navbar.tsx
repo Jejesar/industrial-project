@@ -115,7 +115,11 @@ export default function Navbar() {
               display={{ base: "none", md: "flex" }}
             >
               <NavLink href="/">Accueil</NavLink>
-              <NavLink href="/monitoring">Monitoring</NavLink>
+              {session &&
+                (session.user.role === "ADMIN" ||
+                  session.user.role === "TECH") && (
+                  <NavLink href="/monitoring">Monitoring</NavLink>
+                )}
               {session && session.user.role === "ADMIN" && (
                 <NavLink href="/configuration">Configuration</NavLink>
               )}

@@ -1,25 +1,48 @@
-import { useSession } from "next-auth/react";
+import {
+  Button,
+  Checkbox,
+  Heading,
+  Icon,
+  Table,
+  TableCaption,
+  TableContainer,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  useDisclosure,
+} from "@chakra-ui/react";
 import Head from "next/head";
-import { useRouter } from "next/router";
+import { EditModal, Navbar } from "~/components";
+import { requireAuthentification } from "~/server/requireAuthentification";
+import { InferGetServerSidePropsType } from "next";
+import { FaEdit } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { Navbar } from "~/components";
+import { Tag } from "~/assets/types";
+import { getTagsSorted } from "~/server/getTags";
+import { CloseIcon } from "@chakra-ui/icons";
 
-export default function Configuration({}) {
-  const { data: session, status } = useSession();
-  const [showContent, setShowContent] = useState(false);
-  const router = useRouter();
+export default function Configuration({}: InferGetServerSidePropsType<
+  typeof getServerSideProps
+>) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedTag, setSelectedTag] = useState<Tag>();
+  const [tags, setTags] = useState<Tag[]>([]);
+
+  const openModal = (tag: Tag) => {
+    setSelectedTag(tag);
+    console.log(tag);
+
+    onOpen();
+  };
 
   useEffect(() => {
-    if (status === "authenticated") {
-      if (session?.user?.role !== "ADMIN") {
-        router.push("/");
-      } else {
-        setShowContent(true);
-      }
-    } else {
-      router.push("/");
-    }
-  }, [status]);
+    getTagsSorted().then((tags) => {
+      setTags(tags);
+    });
+  }, []);
 
   return (
     <>
@@ -34,7 +57,99 @@ export default function Configuration({}) {
       <header>
         <Navbar />
       </header>
-      {showContent && <main>Config</main>}
+      <main>
+        <Heading textAlign={"center"} fontSize={"4xl"} pt={10}>
+          Configuration
+        </Heading>
+        <Text
+          textAlign={"center"}
+          fontSize={"xl"}
+          pb={10}
+          pt={1}
+          color={"gray"}
+        >
+          Pour une meilleure expérience, veuillez utilisez un écran large.
+        </Text>
+
+        <TableContainer
+          maxW="7xl"
+          mx={"auto"}
+          pt={5}
+          px={{ base: 2, sm: 5, md: 10 }}
+        >
+          <Table variant="striped">
+            <TableCaption>Configuration des tags</TableCaption>
+            <Thead>
+              <Tr>
+                <Th>Tag</Th>
+                <Th>Nom affiché</Th>
+                <Th>Type</Th>
+                <Th>Description</Th>
+                <Th>Visible</Th>
+                <Th>Edition</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {tags.map((tag) => (
+                <Tr key={tag?.name}>
+                  <Td>{tag?.name}</Td>
+                  <Td>{tag?.displayName || tag?.name}</Td>
+                  <Td>{tag?.type}</Td>
+                  <Td>{tag?.description}</Td>
+                  <Td>
+                    {tag?.show ? (
+                      <Checkbox isReadOnly defaultChecked colorScheme="green" />
+                    ) : (
+                      <Checkbox
+                        isReadOnly
+                        defaultChecked
+                        colorScheme="red"
+                        icon={<Icon as={CloseIcon} />}
+                      />
+                    )}
+                  </Td>
+                  <Td>
+                    <Button onClick={() => openModal(tag)} colorScheme="teal">
+                      <Icon as={FaEdit} />
+                    </Button>
+                  </Td>
+                </Tr>
+              ))}
+              {/* <Tr>
+                <Td>Tag</Td>
+                <Td>Nom affiché</Td>
+                <Td>Adresse sur le PLC</Td>
+                <Td>Type</Td>
+                <Td>Description</Td>
+                <Td>
+                  <Button onClick={() => openModal("dc1")}>
+                    <Icon as={FaEdit} />
+                  </Button>
+                </Td>
+              </Tr> */}
+            </Tbody>
+          </Table>
+        </TableContainer>
+
+        <EditModal
+          isOpen={isOpen}
+          onOpen={onOpen}
+          onClose={onClose}
+          tag={selectedTag}
+        />
+      </main>
     </>
+  );
+}
+
+export async function getServerSideProps(context: any) {
+  return requireAuthentification(
+    context,
+    () => {
+      return {
+        props: {},
+      };
+    },
+    ["ADMIN"]
   );
 }

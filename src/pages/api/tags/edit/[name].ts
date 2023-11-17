@@ -7,6 +7,7 @@ export default async function handle(
 ) {
   if (req.method === "POST") {
     const { name } = req.query;
+    const { displayName, show, description } = req.body;
 
     try {
       await db.tags.update({
@@ -14,7 +15,9 @@ export default async function handle(
           name: name as string,
         },
         data: {
-          show: req.body.show,
+          displayName,
+          show,
+          description,
         },
       });
 

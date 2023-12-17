@@ -14,47 +14,28 @@ import {
   InputRightElement,
   VStack,
   FormErrorMessage,
-  useColorMode,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { signIn, useSession } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
+import { InferGetServerSidePropsType } from "next";
 
-export default function SimpleCard({}) {
-  const { colorMode, toggleColorMode } = useColorMode();
+export default function SignInPage({}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [showPassword, setShowPassword] = useState(false);
-  const { data: session, status } = useSession();
   const router = useRouter();
 
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm();
 
-  let defaultBody = {
-    grant_type: "",
-    username: "asdf@gmail.com",
-    password: "asdf",
-    scope: "",
-    client_id: "",
-    client_secret: "",
-  };
-
   async function onSubmit(values: any) {
-    try {
-      const body = { ...defaultBody, ...values };
-      let res = await signIn("credentials", {
-        ...body,
-        callbackUrl: router.query.callbackUrl,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  if (status === "authenticated") {
-    router.push(router.query.callbackUrl as string);
+    await signIn("credentials", {
+      ...values,
+      callbackUrl: router.query.callbackUrl,
+    });
   }
 
   return (
@@ -78,8 +59,6 @@ export default function SimpleCard({}) {
           p={8}
         >
           <VStack>
-            {/* <FormPasswordlessEmail /> */}
-
             <form onSubmit={handleSubmit(onSubmit)}>
               <Stack spacing={4}>
                 <FormControl
@@ -136,4 +115,25 @@ export default function SimpleCard({}) {
       </Stack>
     </Flex>
   );
+}
+
+export async function getServerSideProps(context: any) {
+  const { req } = context;
+  const session = await getSession({ req });
+
+  if (session) {
+    console.log("session", session);
+    console.log("context", context);
+
+    return {
+      redirect: {
+        destination: "/" + (context.query.callbackUrl || ""),
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
 }

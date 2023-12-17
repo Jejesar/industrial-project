@@ -10,12 +10,21 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { Session } from "next-auth";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+
+type ButtonCTAProps = {
+  children: React.ReactNode;
+  session: Session | null;
+  isPrimary?: boolean;
+};
 
 export default function HeroHome() {
+  const { data: session } = useSession();
   return (
     <Stack
-      //   minH={"calc(100vh - 4rem)"}
-      minH={"100vh"}
+      minH={"calc(100vh - 4rem)"}
       direction={{ base: "column", md: "row" }}
     >
       <Flex p={8} flex={1} align={"center"} justify={"center"}>
@@ -39,11 +48,19 @@ export default function HeroHome() {
             </Text>
           </Heading>
           <Text fontSize={{ base: "md", lg: "lg" }} color={"gray.500"}>
-            The project board is an exclusive resource for contract work.
-            It&apos;s perfect for freelancers, agencies, and moonlighters.
+            Dans l'ère actuelle de l'industrie, notre défi est aussi stimulant
+            que nécessaire : extraire en toute sécurité des données cruciales
+            d'un automate et les rendre accessibles aux utilisateurs via une
+            interface web, tout en maintenant un niveau de sécurité inégalé.
           </Text>
           <Stack direction={{ base: "column", md: "row" }} spacing={4}>
             <Button
+              as={Link}
+              href={
+                ["ADMIN", "TECH"].includes(session?.user.role || "")
+                  ? "/monitoring"
+                  : "/auth/signin"
+              }
               rounded={"full"}
               bg={"blue.400"}
               color={"white"}
@@ -51,19 +68,33 @@ export default function HeroHome() {
                 bg: "blue.500",
               }}
             >
-              Create Project
+              Monitoring
             </Button>
-            <Button rounded={"full"}>How It Works</Button>
+            <Button
+              as={Link}
+              href={
+                session?.user.role === "ADMIN"
+                  ? "/configuration"
+                  : "/auth/signin"
+              }
+              rounded={"full"}
+            >
+              Configuration
+            </Button>
           </Stack>
         </Stack>
       </Flex>
-      <Flex flex={1}>
+      <Flex
+        maxH={"calc(100vh - 4rem)"}
+        justify={"end"}
+        flex={1}
+        display={{ base: "none", md: "flex" }}
+      >
         <Image
-          alt={"Login Image"}
+          alt={"Home page image"}
+          width={"100%"}
           objectFit={"cover"}
-          src={
-            "https://images.unsplash.com/photo-1527689368864-3a821dbccc34?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-          }
+          src={"/hero-banner.png"}
         />
       </Flex>
     </Stack>

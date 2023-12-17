@@ -3,6 +3,7 @@ import {
   Checkbox,
   Heading,
   Icon,
+  Skeleton,
   Table,
   TableCaption,
   TableContainer,
@@ -23,6 +24,7 @@ import { useEffect, useState } from "react";
 import { Tag } from "~/assets/types";
 import { getTagsSorted } from "~/server/getTags";
 import { CloseIcon } from "@chakra-ui/icons";
+import { useSession } from "next-auth/react";
 
 export default function Configuration({}: InferGetServerSidePropsType<
   typeof getServerSideProps
@@ -30,6 +32,8 @@ export default function Configuration({}: InferGetServerSidePropsType<
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedTag, setSelectedTag] = useState<Tag>();
   const [tags, setTags] = useState<Tag[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const { data: session, status } = useSession();
 
   const openModal = (tag: Tag) => {
     setSelectedTag(tag);
@@ -52,7 +56,6 @@ export default function Configuration({}: InferGetServerSidePropsType<
           name="description"
           content="Site web du projet industriel des 3BINI de la HELHa."
         />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       <header>
         <Navbar />
@@ -115,18 +118,6 @@ export default function Configuration({}: InferGetServerSidePropsType<
                   </Td>
                 </Tr>
               ))}
-              {/* <Tr>
-                <Td>Tag</Td>
-                <Td>Nom affiché</Td>
-                <Td>Adresse sur le PLC</Td>
-                <Td>Type</Td>
-                <Td>Description</Td>
-                <Td>
-                  <Button onClick={() => openModal("dc1")}>
-                    <Icon as={FaEdit} />
-                  </Button>
-                </Td>
-              </Tr> */}
             </Tbody>
           </Table>
         </TableContainer>

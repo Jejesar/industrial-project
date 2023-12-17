@@ -1,12 +1,9 @@
-import { Container, Flex, Grid, Heading, Icon } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
+import { Button, Container, Flex, Grid, Heading, Icon } from "@chakra-ui/react";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Navbar, StatsCard } from "~/components";
 import { FaCircle } from "react-icons/fa";
 import { Tag } from "~/assets/types";
-import { tagsConfig } from "~/assets/tags";
 import { requireAuthentification } from "~/server/requireAuthentification";
 import { InferGetServerSidePropsType } from "next";
 import { getTagsShowed } from "~/server/getTags";
@@ -26,6 +23,7 @@ export default function Configuration(
 ) {
   const [tags, setTags] = useState<Tag[]>([]);
   const [update, setUpdate] = useState(false);
+  const [value, setValue] = useState("0");
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -70,7 +68,6 @@ export default function Configuration(
           name="description"
           content="Site web du projet industriel des 3BINI de la HELHa."
         />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       <header>
         <Navbar />

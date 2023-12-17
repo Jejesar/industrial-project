@@ -1,13 +1,23 @@
-import { Button, Heading, ListItem, UnorderedList } from "@chakra-ui/react";
+import {
+  Button,
+  Container,
+  Heading,
+  ListItem,
+  Stack,
+  UnorderedList,
+} from "@chakra-ui/react";
 import mqtt from "mqtt";
 import React, { useEffect, useState } from "react";
+import { requireAuthentification } from "~/server/requireAuthentification";
+import { InferGetServerSidePropsType } from "next";
 
-const Mqtt = ({}) => {
+const Mqtt = ({}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [messages, setMessages] = useState([{ message: "", topic: "" }]);
   const [lastMessage, setLastMessage] = useState({
     message: "",
     topic: "",
   });
+  const [value, setValue] = useState("0");
 
   const client = mqtt.connect("ws://helhatechniquecharleroi.xyz", {
     port: 9001,
@@ -37,9 +47,18 @@ const Mqtt = ({}) => {
     };
   }, []);
 
+  const publishMQTT = () => {
+    client.publish("/groupe2/dc1", value);
+    setValue(value === "0" ? "1" : "0");
+  };
+
   return (
-    <div>
+    <Container maxW={"7xl"}>
       {/* <button onClick={addMessage}>addMessage</button> */}
+      <Stack spacing={4} py={4} direction={"row"}>
+        <Button onClick={() => setMessages([])}>Clear</Button>
+        <Button onClick={publishMQTT}>Toggle DC1 ({value})</Button>
+      </Stack>
       <Heading>Received Messages: </Heading>
       <UnorderedList>
         {messages.map((m, key) => {
@@ -51,81 +70,20 @@ const Mqtt = ({}) => {
           );
         })}
       </UnorderedList>
-      <Button onClick={() => setMessages([])}>Clear</Button>
-      <Button onClick={() => client.publish("/groupe2/test", "Test message")}>
-        Publish Test Message
-      </Button>
-    </div>
+    </Container>
   );
 };
 
 export default Mqtt;
 
-// import { useState, useRef } from "react";
-// import type { MqttClient } from "mqtt";
-// import useMqtt from "~/hooks/useMqtt";
-// import { Box, Button, Heading, Text } from "@chakra-ui/react";
-
-// export default function Mqtt({}) {
-//   const [incommingMessages, setIncommingMessages] = useState<any[]>([]);
-//   const addMessage = (message: any) => {
-//     setIncommingMessages((incommingMessages) => [
-//       ...incommingMessages,
-//       message,
-//     ]);
-//   };
-//   const clearMessages = () => {
-//     setIncommingMessages(() => []);
-//   };
-
-//   const incommingMessageHandlers = useRef([
-//     {
-//       topic: "/groupe2/#",
-//       handler: (msg: string) => {
-//         addMessage(msg);
-//       },
-//     },
-//   ]);
-
-//   const mqttClientRef = useRef<MqttClient | null>(null);
-//   const setMqttClient = (client: MqttClient) => {
-//     mqttClientRef.current = client;
-//   };
-//   useMqtt({
-//     uri: process.env.NEXT_PUBLIC_MQTT_URI || "",
-//     options: {
-//       port: Number(process.env.NEXT_PUBLIC_MQTT_PORT),
-//       username: process.env.NEXT_PUBLIC_MQTT_USERNAME,
-//       password: process.env.NEXT_PUBLIC_MQTT_PASSWORD,
-//       clientId: process.env.NEXT_PUBLIC_MQTT_CLIENTID,
-//     },
-//     topicHandlers: incommingMessageHandlers.current,
-//     onConnectedHandler: (client) => setMqttClient(client),
-//   });
-
-//   const publishMessages = (client: any) => {
-//     if (!client) {
-//       console.log("(publishMessages) Cannot publish, mqttClient: ", client);
-//       return;
-//     }
-
-//     client.publish("/groupe2/#", "1st message from component");
-//   };
-
-//   return (
-//     <Box>
-//       <Heading>Subscribed Topics</Heading>
-//       {incommingMessageHandlers.current.map((i) => (
-//         <Text key={Math.random()}>{i.topic}</Text>
-//       ))}
-//       <Heading>Incomming Messages:</Heading>
-//       {incommingMessages.map((m) => (
-//         <Text key={Math.random()}>{m.payload.toString()}</Text>
-//       ))}
-//       <Button onClick={() => publishMessages(mqttClientRef.current)}>
-//         Publish Test Messages
-//       </Button>
-//       <Button onClick={() => clearMessages()}>Clear Test Messages</Button>
-//     </Box>
-//   );
-// }
+export const getServerSideProps = async (context: any) => {
+  return requireAuthentification(
+    context,
+    () => {
+      return {
+        props: {},
+      };
+    },
+    ["ADMIN"]
+  );
+};

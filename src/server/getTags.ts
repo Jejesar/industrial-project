@@ -16,6 +16,10 @@ export const getTagsSorted = async () => {
     }
   });
 
+  setTimeout(() => {
+    console.log("waited 1s");
+  }, 1000);
+
   return tagsSorted;
 };
 

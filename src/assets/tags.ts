@@ -122,7 +122,7 @@ export const tagsConfig: Tag[] = [
     value: false,
   },
   {
-    name: "BlueTruck2",
+    name: "RedTruck2",
     type: "Booléen",
     address: "",
     value: false,

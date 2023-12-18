@@ -15,7 +15,7 @@ export default async function handle(
           name: name as string,
         },
         data: {
-          displayName,
+          displayName: displayName || name,
           show,
           description,
         },

@@ -1,9 +1,10 @@
 import {
   Button,
   Checkbox,
+  Container,
   Heading,
   Icon,
-  Skeleton,
+  Stack,
   Table,
   TableCaption,
   TableContainer,
@@ -25,6 +26,7 @@ import { Tag } from "~/assets/types";
 import { getTagsSorted } from "~/server/getTags";
 import { CloseIcon } from "@chakra-ui/icons";
 import { useSession } from "next-auth/react";
+import { changeLampColor } from "~/server/changeLampColor";
 
 export default function Configuration({}: InferGetServerSidePropsType<
   typeof getServerSideProps
@@ -47,6 +49,29 @@ export default function Configuration({}: InferGetServerSidePropsType<
       setTags(tags);
     });
   }, []);
+
+  const handleLight = async (light: string) => {
+    switch (light) {
+      case "red":
+        changeLampColor("red");
+        break;
+      case "green":
+        changeLampColor("green");
+        break;
+      case "yellow":
+        changeLampColor("yellow");
+        break;
+      case "white":
+        changeLampColor("white");
+        break;
+      case "off":
+        changeLampColor("off");
+        break;
+      case "rainbow":
+        changeLampColor("rainbow");
+        break;
+    }
+  };
 
   return (
     <>
@@ -73,6 +98,49 @@ export default function Configuration({}: InferGetServerSidePropsType<
         >
           Pour une meilleure expérience, veuillez utilisez un écran large.
         </Text>
+
+        <Container maxW={"7xl"}>
+          <Stack direction={"column"} justify={"center"} flexWrap={"wrap"}>
+            <Stack direction={"row"} justify={"center"} flexWrap={"wrap"}>
+              <Button colorScheme="red" onClick={() => handleLight("red")}>
+                Turn on Red Light
+              </Button>
+              <Button colorScheme="green" onClick={() => handleLight("green")}>
+                Turn on Green Light
+              </Button>
+              <Button
+                colorScheme="yellow"
+                onClick={() => handleLight("yellow")}
+              >
+                Turn on Yellow Light
+              </Button>
+            </Stack>
+            <Stack direction={"row"} justify={"center"} flexWrap={"wrap"}>
+              <Button
+                color="gray.800"
+                variant="outline"
+                borderWidth={2}
+                onClick={() => handleLight("white")}
+              >
+                Turn on White Light
+              </Button>
+              <Button colorScheme="gray" onClick={() => handleLight("off")}>
+                Turn off Light
+              </Button>
+              <Button
+                colorScheme="gray"
+                bgGradient="linear(to-l, #7928CA, #FF0080)"
+                _hover={{
+                  bgGradient: "linear(to-r, red.500, yellow.500)",
+                }}
+                color="white"
+                onClick={() => handleLight("rainbow")}
+              >
+                RAINBOW TIME
+              </Button>
+            </Stack>
+          </Stack>
+        </Container>
 
         <TableContainer
           maxW="7xl"

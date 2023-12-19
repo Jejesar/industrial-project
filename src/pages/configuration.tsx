@@ -14,6 +14,7 @@ import {
   Th,
   Thead,
   Tr,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import Head from "next/head";
@@ -28,9 +29,7 @@ import { CloseIcon } from "@chakra-ui/icons";
 import { useSession } from "next-auth/react";
 import { changeLampColor } from "~/server/changeLampColor";
 
-export default function Configuration({}: InferGetServerSidePropsType<
-  typeof getServerSideProps
->) {
+export default function Configuration({}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedTag, setSelectedTag] = useState<Tag>();
   const [tags, setTags] = useState<Tag[]>([]);
@@ -117,7 +116,7 @@ export default function Configuration({}: InferGetServerSidePropsType<
             </Stack>
             <Stack direction={"row"} justify={"center"} flexWrap={"wrap"}>
               <Button
-                color="gray.800"
+                color={useColorModeValue("gray.800", "white")}
                 variant="outline"
                 borderWidth={2}
                 onClick={() => handleLight("white")}

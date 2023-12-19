@@ -4,6 +4,7 @@ import {
   Container,
   Heading,
   Icon,
+  Select,
   Stack,
   Table,
   TableCaption,
@@ -27,14 +28,12 @@ import { Tag } from "~/assets/types";
 import { getTagsSorted } from "~/server/getTags";
 import { CloseIcon } from "@chakra-ui/icons";
 import { useSession } from "next-auth/react";
-import { changeLampColor } from "~/server/changeLampColor";
 
 export default function Configuration({}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedTag, setSelectedTag] = useState<Tag>();
   const [tags, setTags] = useState<Tag[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const { data: session, status } = useSession();
+  const [selectedColor, setSelectedColor] = useState<string>("off");
 
   const openModal = (tag: Tag) => {
     setSelectedTag(tag);
@@ -50,26 +49,20 @@ export default function Configuration({}: InferGetServerSidePropsType<typeof get
   }, []);
 
   const handleLight = async (light: string) => {
-    switch (light) {
-      case "red":
-        changeLampColor("red");
-        break;
-      case "green":
-        changeLampColor("green");
-        break;
-      case "yellow":
-        changeLampColor("yellow");
-        break;
-      case "white":
-        changeLampColor("white");
-        break;
-      case "off":
-        changeLampColor("off");
-        break;
-      case "rainbow":
-        changeLampColor("rainbow");
-        break;
-    }
+    const body = {
+      color: light,
+    };
+    const res = await fetch("/api/color", {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    console.log(data);
+  };
+
+  const handleSelectChange = (e: any) => {
+    setSelectedColor(e.target.value);
+    console.log(e.target.value);
   };
 
   return (
@@ -100,8 +93,25 @@ export default function Configuration({}: InferGetServerSidePropsType<typeof get
 
         <Container maxW={"7xl"}>
           <Stack direction={"column"} justify={"center"} flexWrap={"wrap"}>
-            <Stack direction={"row"} justify={"center"} flexWrap={"wrap"}>
-              <Button colorScheme="red" onClick={() => handleLight("red")}>
+            <Select
+              placeholder="Sélectionner la couleur"
+              onChange={handleSelectChange}
+            >
+              <option value="off">Lampe éteinte</option>
+              <option value="red">Rouge</option>
+              <option value="green">Verte</option>
+              <option value="blue">Bleue</option>
+              <option value="white">Blanche</option>
+              <option value="rainbow">Rainbow</option>
+            </Select>
+            <Button
+              colorScheme="green"
+              onClick={() => handleLight(selectedColor)}
+            >
+              Envoyer
+            </Button>
+
+            {/* <Button colorScheme="red" onClick={() => handleLight("red")}>
                 Turn on Red Light
               </Button>
               <Button colorScheme="green" onClick={() => handleLight("green")}>
@@ -136,8 +146,7 @@ export default function Configuration({}: InferGetServerSidePropsType<typeof get
                 onClick={() => handleLight("rainbow")}
               >
                 RAINBOW TIME
-              </Button>
-            </Stack>
+              </Button> */}
           </Stack>
         </Container>
 

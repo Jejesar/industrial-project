@@ -15,45 +15,44 @@ export default async function handle(
       console.log("color", color);
 
       // Green :
-      // YellowTruck2
+      // GreenTruck2
 
       // Red :
-      // GreenTruck2
+      // RedTruck2
 
-      // Yellow :
-      // GreenTruck2
-      // YellowTruck2
+      // Blue :
+      // BlueTruck2
 
       // White :
       // RedTruck2
       // GreenTruck2
-      // YellowTruck2
+      // BlueTruck2
 
       switch (color) {
         case "red":
-          mqttClient.publish(`/groupe2/lamp/RedTruck2`, "0");
-          mqttClient.publish(`/groupe2/lamp/GreenTruck2`, "1");
-          mqttClient.publish(`/groupe2/lamp/YellowTruck2`, "0");
+          mqttClient.publish(`/groupe2/lamp/GreenTruck2`, "0");
+          mqttClient.publish(`/groupe2/lamp/BlueTruck2`, "0");
+          mqttClient.publish(`/groupe2/lamp/RedTruck2`, "1");
           break;
         case "green":
           mqttClient.publish(`/groupe2/lamp/RedTruck2`, "0");
-          mqttClient.publish(`/groupe2/lamp/GreenTruck2`, "0");
-          mqttClient.publish(`/groupe2/lamp/YellowTruck2`, "1");
-          break;
-        case "yellow":
-          mqttClient.publish(`/groupe2/lamp/RedTruck2`, "0");
+          mqttClient.publish(`/groupe2/lamp/YellowTruck2`, "0");
           mqttClient.publish(`/groupe2/lamp/GreenTruck2`, "1");
-          mqttClient.publish(`/groupe2/lamp/YellowTruck2`, "1");
+          break;
+        case "blue":
+          mqttClient.publish(`/groupe2/lamp/RedTruck2`, "0");
+          mqttClient.publish(`/groupe2/lamp/GreenTruck2`, "0");
+          mqttClient.publish(`/groupe2/lamp/BlueTruck2`, "1");
           break;
         case "white":
           mqttClient.publish(`/groupe2/lamp/RedTruck2`, "1");
           mqttClient.publish(`/groupe2/lamp/GreenTruck2`, "1");
-          mqttClient.publish(`/groupe2/lamp/YellowTruck2`, "1");
+          mqttClient.publish(`/groupe2/lamp/BlueTruck2`, "1");
           break;
         case "rainbow":
           mqttClient.publish(`/groupe2/lamp/RedTruck2`, "0");
           mqttClient.publish(`/groupe2/lamp/GreenTruck2`, "0");
-          mqttClient.publish(`/groupe2/lamp/YellowTruck2`, "0");
+          mqttClient.publish(`/groupe2/lamp/BlueTruck2`, "0");
           for (let index = 0; index < 3; index++) {
             mqttClient.publish(`/groupe2/lamp/RedTruck2`, "1");
             await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -61,15 +60,15 @@ export default async function handle(
             mqttClient.publish(`/groupe2/lamp/GreenTruck2`, "1");
             await new Promise((resolve) => setTimeout(resolve, 1000));
             mqttClient.publish(`/groupe2/lamp/GreenTruck2`, "0");
-            mqttClient.publish(`/groupe2/lamp/YellowTruck2`, "1");
+            mqttClient.publish(`/groupe2/lamp/BlueTruck2`, "1");
             await new Promise((resolve) => setTimeout(resolve, 1000));
-            mqttClient.publish(`/groupe2/lamp/YellowTruck2`, "0");
+            mqttClient.publish(`/groupe2/lamp/BlueTruck2`, "0");
           }
           break;
         default:
           mqttClient.publish(`/groupe2/lamp/RedTruck2`, "0");
           mqttClient.publish(`/groupe2/lamp/GreenTruck2`, "0");
-          mqttClient.publish(`/groupe2/lamp/YellowTruck2`, "0");
+          mqttClient.publish(`/groupe2/lamp/BlueTruck2`, "0");
           break;
       }
       res.status(200).json({ message: "Color changed" });

@@ -110,7 +110,7 @@ export const tagsConfig: Tag[] = [
     value: 0,
   },
   {
-    name: "YellowTruck2",
+    name: "RedTruck2",
     type: "Booléen",
     address: "",
     value: false,
@@ -122,7 +122,7 @@ export const tagsConfig: Tag[] = [
     value: false,
   },
   {
-    name: "RedTruck2",
+    name: "BlueTruck2",
     type: "Booléen",
     address: "",
     value: false,
@@ -132,5 +132,6 @@ export const tagsConfig: Tag[] = [
     type: "Int",
     address: "%QW1002",
     value: 0,
+    // il faut le diviser par 100 pour avoir en L/min
   },
 ];

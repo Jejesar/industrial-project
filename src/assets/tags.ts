@@ -127,4 +127,10 @@ export const tagsConfig: Tag[] = [
     address: "",
     value: false,
   },
+  {
+    name: "air",
+    type: "Int",
+    address: "%QW1002",
+    value: 0,
+  },
 ];

@@ -20,18 +20,18 @@ mqttClient.on("message", async (topic, message) => {
   var messageString = message.toString().split("/");
   if (messageString.length > 1) return;
   console.log(topic, messageString[0]);
-  // await db.tags.upsert({
-  //   where: {
-  //     name: topic,
-  //   },
-  //   create: {
-  //     name: topic,
-  //     value: message.toString(),
-  //     date: new Date(),
-  //   },
-  //   update: {
-  //     value: message.toString(),
-  //     date: new Date(),
-  //   },
-  // });
+  await db.tags.upsert({
+    where: {
+      name: topic,
+    },
+    create: {
+      name: topic,
+      value: message.toString(),
+      date: new Date(),
+    },
+    update: {
+      value: message.toString(),
+      date: new Date(),
+    },
+  });
 });

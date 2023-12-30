@@ -1,3 +1,4 @@
+// Importation des composants nécessaires depuis les modules "@chakra-ui/react", "mqtt", "react", "~/server/requireAuthentification" et "next"
 import {
   Button,
   Container,
@@ -11,7 +12,9 @@ import React, { useEffect, useState } from "react";
 import { requireAuthentification } from "~/server/requireAuthentification";
 import { InferGetServerSidePropsType } from "next";
 
+// Définition du composant Mqtt
 const Mqtt = ({}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  // Déclaration des états du composant
   const [messages, setMessages] = useState([{ message: "", topic: "" }]);
   const [lastMessage, setLastMessage] = useState({
     message: "",
@@ -19,6 +22,7 @@ const Mqtt = ({}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   });
   const [value, setValue] = useState("0");
 
+  // Connexion au serveur MQTT
   const client = mqtt.connect("ws://helhatechniquecharleroi.xyz", {
     port: 9001,
     username: "groupe2",
@@ -26,11 +30,13 @@ const Mqtt = ({}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     keepalive: 60,
   });
 
+  // Effet pour ajouter le dernier message à la liste des messages
   useEffect(() => {
     setMessages((messages) => [...messages, lastMessage]);
     console.log("lastMessage: ", lastMessage);
   }, [lastMessage]);
 
+  // Effet pour gérer la connexion et la réception des messages
   useEffect(() => {
     client.on("connect", () => {
       client.subscribe("/groupe2/#");
@@ -47,14 +53,15 @@ const Mqtt = ({}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     };
   }, []);
 
+  // Fonction pour publier un message MQTT
   const publishMQTT = () => {
     client.publish("/groupe2/dc1", value);
     setValue(value === "0" ? "1" : "0");
   };
 
+  // Rendu du composant
   return (
     <Container maxW={"7xl"}>
-      {/* <button onClick={addMessage}>addMessage</button> */}
       <Stack spacing={4} py={4} direction={"row"}>
         <Button onClick={() => setMessages([])}>Clear</Button>
         <Button onClick={publishMQTT}>Toggle DC1 ({value})</Button>
@@ -76,6 +83,7 @@ const Mqtt = ({}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
 
 export default Mqtt;
 
+// Fonction pour récupérer les propriétés du serveur
 export const getServerSideProps = async (context: any) => {
   return requireAuthentification(
     context,
@@ -84,6 +92,6 @@ export const getServerSideProps = async (context: any) => {
         props: {},
       };
     },
-    ["ADMIN"]
+    ["ADMIN"] // Seuls les utilisateurs avec le rôle "ADMIN" sont autorisés
   );
 };

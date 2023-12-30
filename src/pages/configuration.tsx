@@ -1,3 +1,4 @@
+// Importation des composants et des hooks nécessaires depuis les modules
 import {
   Button,
   Checkbox,
@@ -15,7 +16,6 @@ import {
   Th,
   Thead,
   Tr,
-  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import Head from "next/head";
@@ -27,47 +27,54 @@ import { useEffect, useState } from "react";
 import { Tag } from "~/assets/types";
 import { getTagsSorted } from "~/server/getTags";
 import { CloseIcon } from "@chakra-ui/icons";
-import { useSession } from "next-auth/react";
 
+// Définition du composant Configuration
 export default function Configuration({}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [selectedTag, setSelectedTag] = useState<Tag>();
-  const [tags, setTags] = useState<Tag[]>([]);
-  const [selectedColor, setSelectedColor] = useState<string>("off");
+  // Utilisation des hooks pour gérer l'état local
+  const { isOpen, onOpen, onClose } = useDisclosure(); // Gestion de l'ouverture/fermeture du modal
+  const [selectedTag, setSelectedTag] = useState<Tag>(); // Gestion du tag sélectionné
+  const [tags, setTags] = useState<Tag[]>([]); // Gestion de la liste des tags
+  const [selectedColor, setSelectedColor] = useState<string>("off"); // Gestion de la couleur sélectionnée
 
+  // Fonction pour ouvrir le modal d'édition
   const openModal = (tag: Tag) => {
-    setSelectedTag(tag);
+    setSelectedTag(tag); // Mise à jour du tag sélectionné
     console.log(tag);
 
-    onOpen();
+    onOpen(); // Ouverture du modal
   };
 
+  // Utilisation de l'effet pour récupérer les tags triés lors du montage du composant
   useEffect(() => {
     getTagsSorted().then((tags) => {
-      setTags(tags);
+      setTags(tags); // Mise à jour de la liste des tags
     });
   }, []);
 
+  // Fonction pour gérer l'allumage de la lumière
   const handleLight = async (light: string) => {
     const body = {
       color: light,
     };
     const res = await fetch("/api/color", {
+      // Envoi de la requête à l'API
       method: "POST",
       body: JSON.stringify(body),
     });
-    const data = await res.json();
+    const data = await res.json(); // Récupération de la réponse
     console.log(data);
   };
 
+  // Fonction pour gérer le changement de la sélection de la couleur
   const handleSelectChange = (e: any) => {
-    setSelectedColor(e.target.value);
+    setSelectedColor(e.target.value); // Mise à jour de la couleur sélectionnée
     console.log(e.target.value);
   };
 
   return (
     <>
       <Head>
+        {/* Définition du titre et de la description de la page */}
         <title>Configuration | Projet Industriel</title>
         <meta
           name="description"
@@ -75,12 +82,15 @@ export default function Configuration({}: InferGetServerSidePropsType<typeof get
         />
       </Head>
       <header>
+        {/* Affichage de la barre de navigation */}
         <Navbar />
       </header>
       <main>
+        {/* Affichage du titre de la page */}
         <Heading textAlign={"center"} fontSize={"4xl"} pt={10}>
           Configuration
         </Heading>
+        {/* Affichage d'un message d'information */}
         <Text
           textAlign={"center"}
           fontSize={"xl"}
@@ -92,11 +102,13 @@ export default function Configuration({}: InferGetServerSidePropsType<typeof get
         </Text>
 
         <Container maxW={"7xl"}>
+          {/* Création d'un formulaire pour la sélection de la couleur */}
           <Stack direction={"column"} justify={"center"} flexWrap={"wrap"}>
             <Select
               placeholder="Sélectionner la couleur"
-              onChange={handleSelectChange}
+              onChange={handleSelectChange} // Gestion du changement de la sélection
             >
+              {/* Options de la sélection */}
               <option value="off">Lampe éteinte</option>
               <option value="red">Rouge</option>
               <option value="green">Verte</option>
@@ -104,52 +116,17 @@ export default function Configuration({}: InferGetServerSidePropsType<typeof get
               <option value="white">Blanche</option>
               <option value="rainbow">Rainbow</option>
             </Select>
+            {/* Bouton pour envoyer la couleur sélectionnée */}
             <Button
               colorScheme="green"
-              onClick={() => handleLight(selectedColor)}
+              onClick={() => handleLight(selectedColor)} // Gestion du clic sur le bouton
             >
               Envoyer
             </Button>
-
-            {/* <Button colorScheme="red" onClick={() => handleLight("red")}>
-                Turn on Red Light
-              </Button>
-              <Button colorScheme="green" onClick={() => handleLight("green")}>
-                Turn on Green Light
-              </Button>
-              <Button
-                colorScheme="yellow"
-                onClick={() => handleLight("yellow")}
-              >
-                Turn on Yellow Light
-              </Button>
-            </Stack>
-            <Stack direction={"row"} justify={"center"} flexWrap={"wrap"}>
-              <Button
-                color={useColorModeValue("gray.800", "white")}
-                variant="outline"
-                borderWidth={2}
-                onClick={() => handleLight("white")}
-              >
-                Turn on White Light
-              </Button>
-              <Button colorScheme="gray" onClick={() => handleLight("off")}>
-                Turn off Light
-              </Button>
-              <Button
-                colorScheme="gray"
-                bgGradient="linear(to-l, #7928CA, #FF0080)"
-                _hover={{
-                  bgGradient: "linear(to-r, red.500, yellow.500)",
-                }}
-                color="white"
-                onClick={() => handleLight("rainbow")}
-              >
-                RAINBOW TIME
-              </Button> */}
           </Stack>
         </Container>
 
+        {/* Création d'un tableau pour la configuration des tags */}
         <TableContainer
           maxW="7xl"
           mx={"auto"}
@@ -159,6 +136,7 @@ export default function Configuration({}: InferGetServerSidePropsType<typeof get
           <Table variant="striped">
             <TableCaption>Configuration des tags</TableCaption>
             <Thead>
+              {/* En-têtes du tableau */}
               <Tr>
                 <Th>Tag</Th>
                 <Th>Nom affiché</Th>
@@ -169,6 +147,7 @@ export default function Configuration({}: InferGetServerSidePropsType<typeof get
               </Tr>
             </Thead>
             <Tbody>
+              {/* Lignes du tableau, générées à partir de la liste des tags */}
               {tags.map((tag) => (
                 <Tr key={tag?.name}>
                   <Td>{tag?.name}</Td>
@@ -176,6 +155,7 @@ export default function Configuration({}: InferGetServerSidePropsType<typeof get
                   <Td>{tag?.type}</Td>
                   <Td>{tag?.description}</Td>
                   <Td>
+                    {/* Affichage de l'état de visibilité du tag */}
                     {tag?.show ? (
                       <Checkbox isReadOnly defaultChecked colorScheme="green" />
                     ) : (
@@ -188,6 +168,7 @@ export default function Configuration({}: InferGetServerSidePropsType<typeof get
                     )}
                   </Td>
                   <Td>
+                    {/* Bouton pour ouvrir le modal d'édition du tag */}
                     <Button onClick={() => openModal(tag)} colorScheme="teal">
                       <Icon as={FaEdit} />
                     </Button>
@@ -198,11 +179,12 @@ export default function Configuration({}: InferGetServerSidePropsType<typeof get
           </Table>
         </TableContainer>
 
+        {/* Modal d'édition du tag */}
         <EditModal
-          isOpen={isOpen}
-          onOpen={onOpen}
-          onClose={onClose}
-          tag={selectedTag}
+          isOpen={isOpen} // Etat d'ouverture du modal
+          onOpen={onOpen} // Fonction pour ouvrir le modal
+          onClose={onClose} // Fonction pour fermer le modal
+          tag={selectedTag} // Tag à éditer
         />
       </main>
     </>
@@ -210,6 +192,7 @@ export default function Configuration({}: InferGetServerSidePropsType<typeof get
 }
 
 export async function getServerSideProps(context: any) {
+  // Vérification de l'authentification de l'utilisateur
   return requireAuthentification(
     context,
     () => {
@@ -217,6 +200,6 @@ export async function getServerSideProps(context: any) {
         props: {},
       };
     },
-    ["ADMIN"]
+    ["ADMIN"] // Seuls les utilisateurs avec le rôle "ADMIN" sont autorisés
   );
 }

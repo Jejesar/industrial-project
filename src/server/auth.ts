@@ -1,8 +1,10 @@
+// Importation des modules nécessaires
 import NextAuth, { MyUser, NextAuthOptions, User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { NextApiHandler } from "next";
 import { DefaultSession } from "next-auth";
 
+// Extension des interfaces Session et User de next-auth pour inclure des champs supplémentaires
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: DefaultSession["user"] & MyUser;
@@ -15,12 +17,13 @@ declare module "next-auth" {
   }
 }
 
+// Configuration des options d'authentification
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_URL,
   session: {
     strategy: "jwt",
-    maxAge: 24 * 60 * 60, // 24 hours
-    updateAge: 1 * 60 * 60, // 1 hour
+    maxAge: 24 * 60 * 60, // 24 heures
+    updateAge: 1 * 60 * 60, // 1 heure
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -37,7 +40,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   jwt: {
-    maxAge: 24 * 60 * 60, // 24 hours
+    maxAge: 24 * 60 * 60, // 24 heures
   },
   providers: [
     Credentials({
@@ -48,6 +51,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: "password", type: "password" },
       },
       async authorize(credentials) {
+        // Vérification des identifiants de l'utilisateur
         const res = await fetch(
           process.env.NEXTAUTH_URL + "/api/utils/check-credentials",
           {
@@ -70,5 +74,7 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/signin",
   },
 };
+
+// Définition du gestionnaire d'API pour l'authentification
 const Handler: NextApiHandler = (req, res) => NextAuth(req, res, authOptions);
 export default Handler;

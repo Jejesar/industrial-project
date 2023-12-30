@@ -1,5 +1,4 @@
-"use client";
-
+// Importation des composants nécessaires depuis les bibliothèques correspondantes
 import {
   Button,
   Flex,
@@ -14,18 +13,16 @@ import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
-type ButtonCTAProps = {
-  children: React.ReactNode;
-  session: Session | null;
-  isPrimary?: boolean;
-};
-
+// Définition du composant HeroHome
 export default function HeroHome() {
+  // Utilisation du hook useSession pour obtenir la session actuelle
   const { data: session } = useSession();
+
+  // Rendu du composant
   return (
     <Stack
-      minH={"calc(100vh - 4rem)"}
-      direction={{ base: "column", md: "row" }}
+      minH={"calc(100vh - 4rem)"} // Hauteur minimale du composant
+      direction={{ base: "column", md: "row" }} // Direction du stack en fonction de la taille de l'écran
     >
       <Flex p={8} flex={1} align={"center"} justify={"center"}>
         <Stack spacing={6} w={"full"} maxW={"lg"}>

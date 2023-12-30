@@ -1,4 +1,5 @@
-import { Button, Container, Flex, Grid, Heading, Icon } from "@chakra-ui/react";
+// Importation des composants nécessaires depuis les modules
+import { Container, Flex, Heading, Icon } from "@chakra-ui/react";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { Navbar, StatsCard } from "~/components";
@@ -8,23 +9,28 @@ import { requireAuthentification } from "~/server/requireAuthentification";
 import { InferGetServerSidePropsType } from "next";
 import { getTagsShowed } from "~/server/getTags";
 
+// Fonction pour convertir une valeur booléenne en chaîne de caractères
 const booleanToString = (bool: boolean) => {
   return bool ? "ON" : "OFF";
 };
 
+// Fonction pour formater une valeur en chaîne de caractères
 const formatString = (value: string | number | boolean) => {
   if (typeof value === "boolean") return booleanToString(value);
   if (typeof value === "string" && (value === "0" || value === "1"))
     return booleanToString(value === "1");
 };
 
+// Définition du composant Configuration
 export default function Configuration(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
+  // Déclaration des états du composant
   const [tags, setTags] = useState<Tag[]>([]);
   const [update, setUpdate] = useState(false);
   const [value, setValue] = useState("0");
 
+  // Effet pour mettre à jour le composant toutes les secondes
   useEffect(() => {
     const timer = setInterval(() => {
       setUpdate(!update);
@@ -32,12 +38,14 @@ export default function Configuration(
     return () => clearInterval(timer);
   }, [update]);
 
+  // Effet pour récupérer les tags à afficher
   useEffect(() => {
     getTagsShowed().then((tags) => {
       setTags(tags);
     });
   }, [update]);
 
+  // Fonction pour afficher les tags
   const showTags = (tags: Tag[]) => {
     return tags.map((tag: Tag) => {
       return (
@@ -60,6 +68,7 @@ export default function Configuration(
     });
   };
 
+  // Rendu du composant
   return (
     <>
       <Head>
@@ -91,6 +100,7 @@ export default function Configuration(
   );
 }
 
+// Fonction pour récupérer les propriétés du serveur
 export async function getServerSideProps(context: any) {
   return requireAuthentification(
     context,
@@ -99,6 +109,6 @@ export async function getServerSideProps(context: any) {
         props: {},
       };
     },
-    ["ADMIN", "TECH"]
+    ["ADMIN", "TECH"] // Seuls les utilisateurs avec les rôles "ADMIN" et "TECH" sont autorisés
   );
 }

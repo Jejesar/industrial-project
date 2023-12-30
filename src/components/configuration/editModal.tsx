@@ -1,7 +1,7 @@
+// Importation des composants nécessaires depuis les bibliothèques correspondantes
 import {
   Button,
   FormControl,
-  FormErrorMessage,
   FormHelperText,
   FormLabel,
   Input,
@@ -20,32 +20,29 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
+// Définition du composant EditModal
 function EditModal({ isOpen, onOpen, onClose, tag }: any) {
+  // Définition de l'état initial des inputs
   const [inputs, setInputs] = useState({
     displayName: "",
     show: false,
     description: "",
   });
+
   const router = useRouter();
 
+  // Utilisation du hook useForm pour gérer le formulaire
   const {
     handleSubmit,
-    register,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm();
 
-  //   async function onSubmit(values: any) {
-  //     try {
-  //       const body = { values };
-  //       //   let res = await;
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-
-  const onSubmit = async (data: any) => {
+  // Fonction à exécuter lors de la soumission du formulaire
+  const onSubmit = async () => {
     try {
+      // Création du corps de la requête
       const body = { ...inputs };
+      // Envoi de la requête à l'API pour éditer le tag
       await fetch("/api/tags/edit/" + tag.name, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -54,10 +51,12 @@ function EditModal({ isOpen, onOpen, onClose, tag }: any) {
     } catch (error) {
       console.log(error);
     }
+    // Fermeture du modal et rechargement de la page
     onClose();
     router.reload();
   };
 
+  // Fonction pour gérer les changements dans les inputs
   const handleChange = (e: any) => {
     const { id, value, checked } = e.target;
     if (id === "show") {
@@ -67,11 +66,13 @@ function EditModal({ isOpen, onOpen, onClose, tag }: any) {
     }
   };
 
+  // Fonction pour fermer le modal
   const closeModal = () => {
     onClose();
     console.log(inputs);
   };
 
+  // Mise à jour des inputs lorsque le modal est ouvert
   useEffect(() => {
     setInputs({
       displayName: tag?.displayName ? tag.displayName : tag?.name,
@@ -80,6 +81,7 @@ function EditModal({ isOpen, onOpen, onClose, tag }: any) {
     });
   }, [isOpen]);
 
+  // Rendu du composant
   return (
     <>
       <Modal isCentered closeOnEsc isOpen={isOpen} onClose={closeModal}>
@@ -140,4 +142,5 @@ function EditModal({ isOpen, onOpen, onClose, tag }: any) {
   );
 }
 
+// Exportation du composant EditModal
 export default EditModal;

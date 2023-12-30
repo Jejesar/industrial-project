@@ -1,3 +1,4 @@
+// Importation des composants nécessaires depuis les modules respectifs
 import React, { useState } from "react";
 import {
   Flex,
@@ -21,16 +22,20 @@ import { getSession, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { InferGetServerSidePropsType } from "next";
 
+// Définition du composant SignInPage
 export default function SignInPage({}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  // Déclaration des états locaux
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
+  // Initialisation du formulaire avec react-hook-form
   const {
     handleSubmit,
     register,
     formState: { isSubmitting },
   } = useForm();
 
+  // Définition de la fonction à exécuter lors de la soumission du formulaire
   async function onSubmit(values: any) {
     await signIn("credentials", {
       ...values,
@@ -38,6 +43,7 @@ export default function SignInPage({}: InferGetServerSidePropsType<typeof getSer
     });
   }
 
+  // Rendu du composant
   return (
     <Flex
       minH={"100vh"}
@@ -117,10 +123,12 @@ export default function SignInPage({}: InferGetServerSidePropsType<typeof getSer
   );
 }
 
+// Définition de la fonction getServerSideProps pour récupérer les données côté serveur
 export async function getServerSideProps(context: any) {
   const { req } = context;
   const session = await getSession({ req });
 
+  // Si une session existe, redirige l'utilisateur vers la page d'accueil
   if (session) {
     console.log("session", session);
     console.log("context", context);
@@ -133,6 +141,7 @@ export async function getServerSideProps(context: any) {
     };
   }
 
+  // Si aucune session n'existe, continue le rendu de la page
   return {
     props: {},
   };

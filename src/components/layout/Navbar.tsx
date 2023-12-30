@@ -1,5 +1,4 @@
-"use client";
-
+// Importation des composants nécessaires depuis les modules correspondants
 import {
   Box,
   Flex,
@@ -27,29 +26,32 @@ import {
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 
+// Définition de l'interface NavLinkProps
 interface NavLinkProps {
-  children: React.ReactNode;
-  href?: string;
+  children: React.ReactNode; // Les enfants du composant NavLink
+  href?: string; // L'URL vers laquelle le lien doit pointer
 }
 
+// Définition du composant NavLink
 const NavLink = ({ children, href }: NavLinkProps) => {
   return (
     <Box
-      as={Link}
-      px={2}
-      py={1}
-      rounded={"md"}
+      as={Link} // Utilisation du composant Link pour la navigation
+      px={2} // Padding horizontal
+      py={1} // Padding vertical
+      rounded={"md"} // Bord arrondi
       _hover={{
-        textDecoration: "none",
-        bg: useColorModeValue("gray.200", "gray.700"),
+        textDecoration: "none", // Pas de soulignement au survol
+        bg: useColorModeValue("gray.200", "gray.700"), // Couleur de fond au survol, dépendant du mode couleur
       }}
-      href={href ? href : "/"}
+      href={href ? href : "/"} // L'URL vers laquelle le lien doit pointer, par défaut vers la page d'accueil
     >
       {children}
     </Box>
   );
 };
 
+// Définition de l'icône de connexion
 const loginIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -61,6 +63,7 @@ const loginIcon = (
   </svg>
 );
 
+// Définition de l'icône de déconnexion
 const logoutIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -72,23 +75,31 @@ const logoutIcon = (
   </svg>
 );
 
+// Importation des composants nécessaires depuis les modules correspondants
 export default function Navbar() {
+  // Utilisation du hook useColorMode pour obtenir le mode de couleur actuel et la fonction pour le changer
   const { colorMode, toggleColorMode } = useColorMode();
+  // Utilisation du hook useDisclosure pour gérer l'état d'ouverture du menu mobile
   const {
     isOpen: isMobileNavOpen,
     onOpen: onMobileNavOpen,
     onClose: onMobileNavClose,
   } = useDisclosure();
+  // Utilisation du hook useSession pour obtenir les informations de session de l'utilisateur
   const { data: session } = useSession();
 
+  // Retourne le composant Navbar
   return (
     <>
       <Box
+        // Définit la couleur de fond en fonction du mode de couleur
         bg={useColorModeValue("gray.100", "gray.900")}
         px={4}
+        // Ajoute une ombre à la boîte
         boxShadow={"0 0 20px 0 rgba(0, 0, 0, 0.15)"}
       >
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+          {/* Bouton pour ouvrir/fermer le menu mobile */}
           <IconButton
             size={"md"}
             icon={isMobileNavOpen ? <CloseIcon /> : <HamburgerIcon />}
@@ -96,8 +107,8 @@ export default function Navbar() {
             display={{ md: "none" }}
             onClick={isMobileNavOpen ? onMobileNavClose : onMobileNavOpen}
           />
-
           <HStack spacing={8} alignItems={"center"}>
+            {/* Lien vers la page d'accueil */}
             <Box
               as={Link}
               href={"/"}
@@ -109,11 +120,13 @@ export default function Navbar() {
             >
               Projet industriel
             </Box>
+            {/* Navigation principale */}
             <HStack
               as={"nav"}
               spacing={4}
               display={{ base: "none", md: "flex" }}
             >
+              {/* Liens de navigation, affichés en fonction du rôle de l'utilisateur */}
               <NavLink href="/">Accueil</NavLink>
               {session &&
                 (session.user.role === "ADMIN" ||
@@ -125,9 +138,10 @@ export default function Navbar() {
               )}
             </HStack>
           </HStack>
-
+          {/* Menu pour les appareils mobiles */}
           <Flex alignItems={"center"} display={{ base: "flex", lg: "none" }}>
             <Menu>
+              {/* Bouton pour ouvrir le menu */}
               <MenuButton
                 as={Button}
                 rounded={"md"}
@@ -136,7 +150,9 @@ export default function Navbar() {
               >
                 <SettingsIcon />
               </MenuButton>
+              {/* Liste des options du menu */}
               <MenuList>
+                {/* Option pour changer le mode de couleur */}
                 <MenuItem onClick={toggleColorMode} closeOnSelect={false}>
                   {colorMode === "light" ? (
                     <Text>
@@ -151,6 +167,7 @@ export default function Navbar() {
                   )}
                 </MenuItem>
                 <MenuDivider />
+                {/* Option pour se connecter ou se déconnecter */}
                 {session ? (
                   <>
                     <MenuItem color={"gray.400"}>
@@ -169,12 +186,14 @@ export default function Navbar() {
             </Menu>
           </Flex>
 
+          {/* Menu pour les appareils de bureau */}
           <Flex alignItems={"center"} display={{ base: "none", lg: "flex" }}>
             <HStack spacing={2}>
+              {/* Bouton pour changer le mode de couleur */}
               <Button onClick={toggleColorMode}>
                 {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
               </Button>
-
+              {/* Bouton pour se connecter ou se déconnecter */}
               {session ? (
                 <Button
                   leftIcon={logoutIcon}
@@ -195,6 +214,8 @@ export default function Navbar() {
             </HStack>
           </Flex>
         </Flex>
+
+        {/* Navigation mobile */}
         {isMobileNavOpen ? (
           <Box pb={4} display={{ md: "none" }}>
             <Stack as={"nav"} spacing={4}>

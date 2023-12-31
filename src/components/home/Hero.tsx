@@ -48,7 +48,7 @@ export default function HeroHome() {
             Dans l'ère actuelle de l'industrie, notre défi est aussi stimulant
             que nécessaire : extraire en toute sécurité des données cruciales
             d'un automate et les rendre accessibles aux utilisateurs via une
-            interface web, tout en maintenant un niveau de sécurité inégalé.
+            interface web, tout en maintenant un niveau de sécurité élevé.
           </Text>
           <Stack direction={{ base: "column", md: "row" }} spacing={4}>
             <Button

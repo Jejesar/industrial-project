@@ -21,7 +21,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 // Définition du composant EditModal
-function EditModal({ isOpen, onOpen, onClose, tag }: any) {
+function EditModal({ isOpen, onClose, tag }: any) {
   // Définition de l'état initial des inputs
   const [inputs, setInputs] = useState({
     displayName: "",

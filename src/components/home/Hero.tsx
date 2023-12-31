@@ -9,7 +9,6 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 

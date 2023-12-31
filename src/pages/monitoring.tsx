@@ -77,6 +77,8 @@ export default function Configuration(
           name="description"
           content="Site web du projet industriel des 3BINI de la HELHa."
         />
+
+        <link rel="shortcut icon" href="/favicon.png" type="image/x-icon" />
       </Head>
       <header>
         <Navbar />

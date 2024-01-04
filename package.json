@@ -26,7 +26,6 @@
     "@react-icons/all-files": "^4.1.0",
     "@t3-oss/env-nextjs": "^0.7.0",
     "chalk": "^5.3.0",
-    "chart.js": "^4.4.0",
     "framer-motion": "^10.16.4",
     "loglevel": "^1.8.1",
     "loglevel-plugin-prefix": "^0.8.4",

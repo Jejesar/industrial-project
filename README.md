@@ -1,28 +1,29 @@
-# Create T3 App
+# Projet Industriel - Application Web de Surveillance d'Automate
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+Bienvenue dans le repository de notre projet industriel, une application web conçue pour extraire les données d'un automate industriel de manière sécurisée et les rendre accessibles via une interface web conviviale.
 
-## What's next? How do I make an app with this?
+![Page d'accueil du site web](assets/image.png)
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## Auteurs
+Ce projet a été réalisé dans le cadre du cours de projet industriel en collaboration avec les membres suivants :
+- Jérôme
+- Steven
+- Antoine
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Contexte
+Le travail a été effectué à Technocampus à Mons, en particulier dans la mini-usine 4. Nous avons effectué cinq visites pour comprendre les besoins spécifiques et mener à bien notre mission.
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+## Infrastructure
+Pour garantir une connexion sécurisée entre l'automate et le site, nous avons intégré l'Ewon Flexy 203, un routeur industriel performant. Ce composant a été configuré pour établir un tunnel VPN, renforçant ainsi la sécurité de la communication entre l'automate et le serveur. L'accès aux fonctionnalités avancées du site nécessite une identification, ajoutant une couche supplémentaire de sécurité.
 
-## Learn More
+## Fonctionnalités
+À partir de l'interface web que nous avons développée, les utilisateurs peuvent :
+- Surveiller les capteurs détectant des événements spécifiques.
+- Actionner une lampe et sélectionner la couleur souhaitée.
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+## Approche
+Ce projet a exigé une approche méticuleuse pour concilier la complexité des systèmes industriels avec une expérience utilisateur optimale. La sécurité des communications a été notre priorité, et nous avons mis en œuvre des mesures telles qu'un tunnel VPN pour garantir une communication sécurisée.
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+## Remerciements
+Nous tenons à remercier Technocampus pour l'accès à leurs installations et l'opportunité de travailler sur ce projet industriel passionnant.
+Nous tenons également à remercier notre professeur, B. Michaux, pour son soutien et ses conseils tout au long du projet ainsi que notre accompagnateur sur place, M. Xavier, pour son aide et ses conseils.
